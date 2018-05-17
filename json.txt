@@ -1,0 +1,18 @@
+JSON (JavaScript Object Notation) is a format that uses human-readable text to transmit data objects consisting of key–value pairs and arrays
+
+let students = [
+{name: 'John Smith', nickname: 'Jonno', dob: '1990-10-01},
+{name: 'Mary juju', nickname: 'Mazdog', dob: '1988-12-01},
+]
+Convet it to a string recursively (makes every part a string --
+
+JSON.stringify(students)
+
+-- 
+
+let j = '{"name":"Rover","location":"Australia","walks":[{"location":"Brisbane","distance":10,"timestamp":"2018-05-16T02:32:50.828Z"},{"location":"Sydney","distance":20,"timestamp":"2018-05-16T02:32:50.828Z"},{"location":"Melbourne","distance":15,"timestamp":"2018-05-16T02:32:50.828Z"}]}'
+
+JSON.parse(j).walks
+or
+x = JSON.parse(j)
+x.walks
