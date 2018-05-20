@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ToDo App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+  </head>
+  <body>
+    <div class="column is-12" style="text-align: center;">
+      <small>TO DO</small>
+      <h2 style="font-weight: bold">0</h2>
+    </div>
+
+    <div id="progress_bar" class="column"></div>
+
+    <form id="mainForm">
+      <input type="text" class="input_bar column" placeholder="Add a Todo!" value="" style="width:100%; text-align: center;">
+      <input type="submit" style="visibility: hidden">
+    </form>
+
+    <div id="entries" style="text-align: center;"></div>
+
+  <script>
+      
+      document.getElementById('mainForm').addEventListener('submit', function(event) {
+        event.preventDefault()
+        displayItem()
+        itemCounter()
+      })
+
+      function toggle(item) {
+        item.addEventListener('click', function(event) {
+          
+          if (item.value === "pending") {
+            item.value = "complete"
+            item.setAttribute("style", "background-color: lightgreen; margin-bottom: 1em;")
+            itemCounter(true)
+          } else {
+            item.value = "pending"
+            item.setAttribute("style", "background-color: lightgrey; margin-bottom: 1em;")
+            itemCounter()
+          }
+        progressBar()                  
+        })
+      }
+
+      const bar = document.getElementById('progress_bar')
+
+      function progressBar() {
+        const completeCount = []
+        let tasks = document.getElementsByClassName('todo_item')
+        let  = document.getElementById('progress_percentage')
+        for(let i = 0; i < tasks.length; i++) {
+          if (tasks[i].value === "complete") {
+            completeCount.push(tasks[i].value)
+          }
+        }
+        if (completeCount.length === 0) {
+          bar.style = "visibility: hidden"
+        } else {
+          bar.style = `width: ${(100 / tasks.length) * completeCount.length}%; background-color: green;`
+        }
+        bar.innerHTML = `${((100 / tasks.length) * completeCount.length).toFixed(0)}%`
+      }
+
+      function getFormData(form) {
+  
+        let inputs = form.getElementsByTagName('input')
+        for(let x = 0; x < inputs.length; x++) {
+          if(inputs[x].type != 'text') {
+            continue;
+          }
+          return inputs[x].value
+        }
+      }
+  
+      function displayItem() {
+  
+        const form = document.getElementById('mainForm')
+        let item = getFormData(form)
+        const entry = document.createElement('div')
+        entry.className = "todo_item column"
+        entry.style = "background-color: lightgrey; margin-bottom: 1em;"
+        entry.textContent = item
+        entry.value = "pending"
+        const div = document.getElementById('entries')
+        div.prepend(entry)
+        form[0].value = ""
+        toggle(entry)
+      }
+  
+      function itemCounter(checked) {
+        let counter = document.querySelector('h2')
+        const num = Number(counter.innerHTML)
+        if (checked) {
+          counter.innerHTML = (num - 1).toString()        
+        } else {
+        counter.innerHTML = (num + 1).toString()
+        }
+      }
+  
+    
+    </script>
+  </body>
+</html>
