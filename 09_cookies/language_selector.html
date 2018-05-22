@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Language Selector</title>
+    <style>
+    body {
+      text-align: center;
+      padding: 100px;
+    }
+    a {
+      cursor: pointer;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    a.selected {
+      font-weight: bold;
+    }
+    </style>
+  </head>
+  <body>
+
+    <p>Select your language:</p>
+      <a id="english">English</a> | <a id="french">French</a> | <a id="doggo">Doggo</a>
+    </div>
+
+    <script>
+
+      function getCookie(name) {
+
+        var re = new RegExp(name + "=([^;]+)");
+        var value = re.exec(document.cookie);
+        return (value != null) ? unescape(value[1]) : null;
+      }
+
+      window.onload = function() {
+        let language = getCookie("lang")
+        let options = document.querySelectorAll('a')
+        for (let i = 0; i < options.length; i++) {
+          if (options[i].id === language) {
+            options[i].classList = "selected"
+          }
+        }
+      }
+
+      // Our event listener callback
+      const selectLanguage = (event) => {
+        console.log(event.target)
+      // If there's already a bold link, unbold it (remove the 'selected' class)
+      const currentlySelected = document.querySelector('a.selected');
+      if (currentlySelected) {
+        currentlySelected.classList = '';
+      }
+
+      // Add the 'selected' class to the link so it turns bold!
+      event.target.classList = 'selected';
+      document.cookie = `lang=${event.target.id}`
+    }
+
+    // Find every language and add an 'on click' event listener
+    const languages = document.querySelectorAll('a');
+    languages.forEach(language => {
+      // When a language is clicked, run the selectLanguage function
+      language.addEventListener('click', selectLanguage);
+    });
+    </script>
+  </body>
+</html>
