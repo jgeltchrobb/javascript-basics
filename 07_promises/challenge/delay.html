@@ -22,15 +22,11 @@
     
     */
    
-    delay(1000).then(function(){
-      console.log('One second has passed!')
-    })
-
     function delay(time) {
       return new Promise(function(resolve, reject) {
         try {
-          const delay_func = setTimeout(function () {
-            resolve(delay_func)
+          setTimeout(function () {
+            resolve()
           }, time);
         }
         catch (error) {
@@ -38,7 +34,12 @@
         }
       })
     }
-
+    
+    delay(1000).then(function(){
+      console.log('One second has passed!')
+    }).catch(function(err) {
+      console.log(`There was an error: ${err.message}`)
+    })
 
     </script>
   </body>
