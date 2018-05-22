@@ -1,0 +1,15 @@
+Session Storage
+
+sessionStorage
+
+pass in a key and a value
+sessionStorage.setItem('name', 'steve')
+sessionStorage.getItem('name')
+
+storing an int will retirn a string with getItem
+
+localStorage.setItem('obj', {hello: "world"})
+getItem will return an object, can stringify it first
+
+localStorage.setItem('obj', JSON.stringify({hello: "world"}))
+

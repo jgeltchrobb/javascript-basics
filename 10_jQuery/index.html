@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>jQuery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <style>
+    h1 {
+      position: relative;
+      left: 100vw;
+      opacity: 0;
+      transition: all 1s ease-in;
+    }
+
+    h1.show {
+      left: 0;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <button>Click me!</button>
+  <h1>I will fade in!!</h1>
+  <ul id="list">
+    <li>One</li>
+    <li>Two</li>
+    <li>Three</li>
+  </ul>
+  <script src="script.js"></script>
+</body>
+</html>
