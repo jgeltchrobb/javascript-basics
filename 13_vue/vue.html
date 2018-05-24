@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+</head>
+<body>
+
+  <!-- v- in v-bind indicates that its a vue directive -->
+  
+  <div id="vueApp">
+    <!-- {{}} outputs something -->
+    <h1>{{ message }}</h1>
+    <h2 v-bind:title='popup' v-bind:style='style'>Hover over this!</h2>
+    <span v-if='seen'>Now you see me!</span>
+    <br><br>
+    <!-- if logic can be valid JS,has to evaluate to true or false -->
+    <span v-if='num > 5'>Logic!</span>
+
+    <!-- Using methods -->
+    <span v-if='gtFive()'>methodo</span>
+
+    <!-- Loops -->
+    <ol>
+      <!-- always put the v-for on the element you want to repeat -->
+      <li v-for='todo in todos'>
+        {{ todo.text }}
+      </li>
+    </ol>
+    <!-- v-on bind a callback/event handler to a particular event -->
+    <button v-on:click="reverseMessage">Reverse Message</button>
+    <!-- binds to model os message updates as you type -->
+    <input v-model='message' type="text">
+  </div>
+
+  <script>
+
+    const app = new Vue({
+
+      // el is targetting which element the app will run in
+      el: '#vueApp',
+      // data is essentially the model
+      data: {
+        // these can be accessed by app.message, etc
+        message: "Hello Vue!",
+        popup: 'This is a popup message!',
+        style: 'color: red',
+        seen: true,
+        num: 4,
+        todos: [
+          { text: 'Learn Javascript' },
+          { text: 'Learn Vue' },
+          { text: 'Build something awesome!' }
+        ]
+      },
+      methods: {
+        gtFive: function() {
+          return this.num < 5
+        },
+        reverseMessage: function() {
+          this.message = this.message.split('').reverse().join('')
+        }
+      }
+    })
+    // ADDING TO THE LOOP
+    app.todos.push( { text: 'New Item' } )
+
+
+  </script>
+
+</body>
+</html>
