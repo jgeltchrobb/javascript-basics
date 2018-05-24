@@ -11,6 +11,26 @@ $(document).keyup(function(){
 
 var cntrlIsPressed = false;
 
+// change todo_item class to completebtn
+// chance complete button value to complete
+// push to storage and locally store it
+
+$('#completeAll').click(function(event) {
+  for (let i = 0; i < $('.todo_item').length; i++) {
+    if ($('.todo_item')[i].className !== 'todo_item column completeBtn') {
+      $('.todo_item')[i].className = 'todo_item column completeBtn'
+      console.log($('.todo_item')[i].childNodes[1].value)
+      $('.todo_item')[i].childNodes[1].value = 'complete'
+      console.log($('.todo_item')[i].childNodes[1].value)   
+      
+    }
+    changeData($('.todo_item'), 'complete')
+    console.log(storage)
+    
+  }
+  // console.log($('.todo_item').text())
+})
+
 
 $('#mainForm').on('submit', function(event) {
   event.preventDefault()
@@ -66,7 +86,7 @@ function displayItem(item, check) {
         event.target.remove()
       }
   })
-  
+
   $('form input:first-child').val("")
   
   itemCounter()
@@ -118,10 +138,23 @@ function removeData(item) {
 
 function changeData(parentDiv, status) {
 
-  for (let i in storage) {
-    if (storage[i].task === parentDiv.clone().children().remove().end().text()) {
-      storage[i].status = status
+  for (let i = 0; i < parentDiv.length; i++) {
+    console.log('abc')
+    console.log($(parentDiv[i]).clone().children().remove().end().text())
+    console.log(status)
+    
+    // try a loop here for parentdiv?
+    console.log(storage)
+    for (let i in storage) {
+      if (storage[i].task === $(parentDiv[i]).clone().children().remove().end().text()) {
+        console.log('yeeeeeeeeeep')
+        console.log(storage[i].status)
+        
+        storage[i].status = status
+        console.log(storage[i].status)
+      }
     }
+    console.log(storage)
   }
   localStorage.setItem('items', JSON.stringify(storage))
 }
