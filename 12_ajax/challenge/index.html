@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <style>
+    .fav {
+      background-color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="mainForm">
+    <input type="text" placeholder="Enter a Tweet">
+    <input type="submit" style="visibility: hidden">
+
+  </form>
+
+  <div id="container"></div>
+
+  <script>
+    $(document).ready(function() {
+      getRequest()
+      // BUTTON CLICK
+      $('#container').on('click', '#deleteBtn', function(event) {
+        // console.log($(event.target).parent())
+        deleteData($(this).parent(), $(this).parent().data('id'))
+      })
+      $('#container').on('click', '#favBtn', function() {
+        $(this).parent().toggleClass('fav')
+        patchRequest($(this).parent())
+      })
+      // FORM SUBMIT
+      $('#mainForm').on('submit', function(event) {
+        event.preventDefault()
+        let newTweet = getFormData()
+        this[0].value = ""
+        // POST REQUEST
+        postRequest(newTweet)
+
+      })
+    })
+
+    function getFormData() {
+      let inputs = $('input')
+      for(let x = 0; x < inputs.length; x++) {
+        if(inputs[x].type != 'text') {
+          continue;
+        }
+        return inputs[x].value
+      }
+    }
+
+    function getRequest() {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3000/tweets.json',
+        success: function(response, textStatus, xhr) {
+          if (xhr.status === 200 || xhr.status === 201) {
+            response.forEach(function(tweet) {
+              let favBool = ''
+              if (tweet.fav) {
+                favBool = 'fav'
+              }
+
+              $('#container').prepend(`<li class="${favBool}" data-id="${tweet.id}">Tweet content: ${tweet.content}<button id="deleteBtn">Delete</button><button id="favBtn">Favourite</button></li>`)
+            })
+          } else {
+            console.log(`Reached server but a ${xhr.status} error occurred`)
+          }
+        },
+        error: function() {
+          console.log('Could not connect to the server')
+        }
+      })
+    }
+
+    function postRequest(newTweet) {
+      $.ajax({
+          type: 'POST',
+          url: 'http://localhost:3000/tweets.json',
+          data: { tweet: { content: newTweet, fav: false }},
+          success: function(tweet, textStatus, xhr) {
+            if (xhr.status === 200 || xhr.status === 201) {
+              $('#container').prepend(`<li data-id="${tweet.id}">Tweet content: ${tweet.content}<button id="deleteBtn">Delete</button><button id="favBtn">Favourite</button></li>`)
+              console.log('Tweet added')
+            } else {
+              console.log('Reached server but error occurred')
+            }
+          },
+
+          error: function() {
+            console.log('Could not connect to the server')
+          }
+        })
+    }
+
+    function patchRequest(id) {
+      let idString = id.clone().children().remove().end().text()
+      let n = idString.split(" ");
+      let word = n[n.length - 1]
+      let favBool = false
+      if (id.hasClass('fav')) {
+        favBool = true
+      }
+
+      $.post(`http://localhost:3000/tweets/${id.data('id')}.json`, {
+        _method: 'PATCH',
+        tweet: { content: word, fav: favBool },
+
+      }, function(response) {
+        console.log(response)
+      })
+    } 
+
+    function deleteData(parent, id) {
+      $.post(`http://localhost:3000/tweets/${id}.json`, {
+        _method: 'DELETE'
+      }, function(response) {
+        parent.remove()
+      })
+    }
+
+    
+    // const request = fetch('http://localhost:3000/tweets.json').then(function(response) {
+    //   return response.json()
+    // }).then(function(tweets) {
+    //   tweets.forEach(function(tweet) {
+    //     $('body').append(`<li>Tweet content: ${tweet.content}</li>`)
+    //   })
+    // })
+
+      // response.forEach(function(tweet) {
+      //   $('body').append(`<li>Tweet content: ${tweet.content}</li>`)
+      // })
+
+
+  </script>
+</body>
+</html>

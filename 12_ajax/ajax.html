@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+  <script>
+
+    // VANILLA
+
+    // let request = new XMLHttpRequest()
+    // request.open('GET', 'https://randomuser.me/api/', true)
+    // request.onload = function() {
+    //   if (request.status === 200) {
+    //     console.log(request.responseText)
+    //   } else {
+    //     console.log('Reached server but error occurred')
+    //   }
+    // }
+    // request.onerror = function() {
+    //   console.log('Could not connect tot he server')
+    // }
+    // request.send()
+
+    // JQUERY
+
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:3000/students.json',
+      data: { student: { name: 'Jim', location: 'Melbourne'}},
+      success: function(student, textStatus, xhr) {
+        if (xhr.status === 201) {
+          $('body').append(`<h2>Created: ${student.name} (ID: ${student.id}) in ${student.location}</h2>`)
+        } else {
+          console.log('Reached server but error occurred')
+        }
+      },
+      error: function() {
+        console.log('Could not connect tot he server')
+      }
+    })
+
+    // GET DATA
+    $.ajax({
+      type: 'GET',
+      url: 'http://localhost:3000/students.json',
+      success: function(response, textStatus, xhr) {
+        if (xhr.status === 200) {
+          response.forEach(function(student) {
+            $('body').append(`<h3>${student.name} is in ${student.location}</h3>`)
+          })
+        } else {
+          console.log('Reached server but error occurred')
+        }
+      },
+      error: function() {
+        console.log('Could not connect tot he server')
+      }
+    })
+  </script>
+  
+</body>
+</html>
