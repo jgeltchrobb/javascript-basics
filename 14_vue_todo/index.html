@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+    </script>
+  </head>
+  <body class="has-text-centered">
+    <div id="vueApp">
+        <progress class="progress is-primary" v-bind:value="getProgress()" max="100">0</progress>
+        
+        <nav class="level">
+        <div class="level-item">
+          <div>
+            <div class="heading">To Do</div>
+            <h1 class="title is-1">{{ tasks.length }}</h1>
+          </div>
+        </div>
+      </nav>
+
+      <form @submit.prevent='addTask'>
+        <input type="text" class="input is-large is-primary has-text-centered" placeholder="add a todo!" value="">
+        <input type="submit" style="visibility: hidden;">
+      </form>
+
+      <br>
+      
+      <div id="tasks">
+        <div v-for='(task, index) in tasks' v-bind:class='getClass(task)' v-on:click="task.completed = !task.completed" @click.ctrl='removeTask(task, index)'>
+          {{ task.task }}
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const app = new Vue({
+        el: '#vueApp',
+        data: {
+          style: 'notification',
+          tasks: []
+        },
+        created: function() {
+          $.ajax({
+              type: 'GET',
+              url: 'http://localhost:3000/todos.json',
+              success: function(response, textStats, xhr) {
+                if (xhr.status === 200 || xhr.status === 201) {
+                  app.tasks = response
+                }
+              }
+            }
+          )},
+        methods: {
+          getClass: function(task) {
+            app.patchTask(task)
+            return {
+              'notification is-primary': task.completed,
+              'notification': !task.completed,
+            }
+          },
+          addTask: function (event) {
+            let val = event.target[0].value
+            let id = event.target[0].id
+            event.target[0].value = ""
+            let task = {task: val, completed: false, id: id}
+            app.tasks.push(task)
+            app.postTask(task)
+          },
+          getProgress: function() {
+            let compCount = this.tasks.filter(function(task) {
+              return task.completed === true
+            })
+            if (compCount.length > 0) {
+              return compCount.length * (100 / this.tasks.length)
+            } else {
+              return 0
+            }
+          },
+          patchTask: function(task) {
+            console.log(JSON.stringify(task))
+            $.post(`http://localhost:3000/todos/${task.id}.json`, {
+              _method: 'PATCH',
+              todo: task              
+            })
+          },
+          removeTask: function(task, index) {
+            this.tasks.splice(index, 1)
+            console.log(index)
+            console.log(task)            
+            $.post(`http://localhost:3000/todos/${task.id}.json`, {
+              _method: 'DELETE',
+            })
+          },
+          postTask: function(obj) {
+            let newTask = {task: obj.task, completed: obj.completed}
+            $.post('http://localhost:3000/todos.json', {
+              _method: 'POST',
+              todo: newTask
+            })
+          },
+        },
+      })
+    </script>
+  </body>
+  </html>
